@@ -11,17 +11,26 @@ import java.util.*;
 public class MainController {
     private int maxUserId = 0;
     private int maxPostId = 0;
-    //private List<UserPost> posts = new ArrayList<>();
-    private Map<Integer, UserPost> idToPost = new TreeMap<>();
-    //private Set<Integer> userIdSet = new HashSet<>();
+    private List<UserPost> posts = new ArrayList<>();
     private List<User> users = new ArrayList<>();
+
+    @GetMapping("/get/userNumber")
+    @ResponseBody
+    public int getUserNumber(){
+        return maxUserId;
+    }
+
+    @GetMapping("/get/postNumber")
+    @ResponseBody
+    public int getPostNumber(){
+        return maxPostId;
+    }
 
     @PostMapping(value = "/create/user")
     @ResponseBody
     public String createUser(@RequestParam("name") String name){
         User user = new User(maxUserId, name);
         users.add(user);
-       // userIdSet.add(maxUserId);
         maxUserId++;
         return user.toString();
     }
@@ -32,10 +41,10 @@ public class MainController {
         if (maxUserId <= userId){
             return "Invalid user id";
         }
-        UserPost post = new UserPost(maxPostId, userId, users.get(userId).getName(), text);
-        idToPost.put(maxPostId, post);
+        UserPost userPost = new UserPost(maxPostId, userId, users.get(userId).getName(), text);
+        posts.add(userPost);
         maxPostId++;
-        return post.toString();
+        return userPost.toString();
     }
 
     @PostMapping("/vote")
@@ -44,22 +53,22 @@ public class MainController {
         if (maxUserId <= userId){
             return "Invalid userId";
         }
-        if (!idToPost.containsKey(postId)){
+        if (maxPostId <= postId){
             return "Invalid postId";
         }
         if (value == 0){
             return "Invalid vote value";
         }
         int val = users.get(userId).vote(value / Math.abs(value), postId);
-        idToPost.get(postId).changeRating(val);
-        return idToPost.get(postId).toString();
+        posts.get(postId).changeRating(val);
+        return posts.get(postId).toString();
     }
 
 
     @GetMapping("/get/posts")
     @ResponseBody
     public String getPosts(){
-        return idToPost.values().toString();
+        return posts.toString();
     }
     @GetMapping("/get/users")
     @ResponseBody

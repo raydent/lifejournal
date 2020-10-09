@@ -68,7 +68,10 @@ public class MainController {
         if (value == 0){
             return "Invalid vote value";
         }
-        int val = users.get(userId).vote(value / Math.abs(value), postId, password);
+        if (!users.get(userId).checkPassword(password)){
+            return "Invalid password";
+        }
+        int val = users.get(userId).vote(value / Math.abs(value), postId);
         posts.get(postId).changeRating(val);
         return posts.get(postId).toString();
     }

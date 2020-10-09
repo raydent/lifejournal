@@ -16,18 +16,13 @@ public class User {
         return this.password.equals(password);
     }
 
-    public int vote(int voteValue, int postId, String password){
+    public int vote(int voteValue, int postId){
         int previousVoteValue = 0;
-        if (checkPassword(password)) {
-            if (votedPosts.containsKey(postId)) {
-                previousVoteValue = votedPosts.get(postId);
-            }
-            votedPosts.put(postId, voteValue);
-            return voteValue - previousVoteValue;
+        if (votedPosts.containsKey(postId)) {
+            previousVoteValue = votedPosts.get(postId);
         }
-        else{
-            return 0;
-        }
+        votedPosts.put(postId, voteValue);
+        return voteValue - previousVoteValue;
     }
 
     public String getName() {

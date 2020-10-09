@@ -10,23 +10,34 @@ public class User {
     private int id = 0;
     private String name = null;
     private Map<Integer, Integer> votedPosts = new HashMap<>();
+    private String password = null;
 
-    public int vote(int voteValue, int postId){
+    public boolean checkPassword(String password){
+        return this.password.equals(password);
+    }
+
+    public int vote(int voteValue, int postId, String password){
         int previousVoteValue = 0;
-        if (votedPosts.containsKey(postId)){
-            previousVoteValue = votedPosts.get(postId);
+        if (checkPassword(password)) {
+            if (votedPosts.containsKey(postId)) {
+                previousVoteValue = votedPosts.get(postId);
+            }
+            votedPosts.put(postId, voteValue);
+            return voteValue - previousVoteValue;
         }
-        votedPosts.put(postId, voteValue);
-        return voteValue - previousVoteValue;
+        else{
+            return 0;
+        }
     }
 
     public String getName() {
         return name;
     }
 
-    public User(int id, String name) {
+    public User(int id, String name, String password) {
         this.id = id;
         this.name = name;
+        this.password = password;
     }
 
     @Override

@@ -28,8 +28,9 @@ public class MainController {
 
     @PostMapping(value = "/create/user")
     @ResponseBody
-    public String createUser(@RequestParam("name") String name){
-        User user = new User(maxUserId, name);
+    public String createUser(@RequestParam("name") String name,
+                             @RequestParam("password") String password){
+        User user = new User(maxUserId, name, password);
         users.add(user);
         maxUserId++;
         return user.toString();
@@ -37,9 +38,14 @@ public class MainController {
 
     @PostMapping("/create/post")
     @ResponseBody
-    public String createPost(@RequestParam("userId") int userId, @RequestParam("text") String text){
+    public String createPost(@RequestParam("userId") int userId,
+                             @RequestParam("text") String text,
+                             @RequestParam("password") String password){
         if (maxUserId <= userId){
             return "Invalid user id";
+        }
+        if (!users.get(userId).checkPassword(password)){
+            return "Invalid password";
         }
         UserPost userPost = new UserPost(maxPostId, userId, users.get(userId).getName(), text);
         posts.add(userPost);
@@ -49,7 +55,10 @@ public class MainController {
 
     @PostMapping("/vote")
     @ResponseBody
-    public String vote(@RequestParam("userId") int userId, @RequestParam("postId") int postId, @RequestParam("value") int value){
+    public String vote(@RequestParam("userId") int userId,
+                       @RequestParam("postId") int postId,
+                       @RequestParam("value") int value,
+                       @RequestParam("password") String password){
         if (maxUserId <= userId){
             return "Invalid userId";
         }
@@ -59,7 +68,7 @@ public class MainController {
         if (value == 0){
             return "Invalid vote value";
         }
-        int val = users.get(userId).vote(value / Math.abs(value), postId);
+        int val = users.get(userId).vote(value / Math.abs(value), postId, password);
         posts.get(postId).changeRating(val);
         return posts.get(postId).toString();
     }

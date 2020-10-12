@@ -3,10 +3,8 @@ package com.example.lifejournal.model;
 public class UserPost {
     private String creatorName = null;
     private String text = null;
+    private String postName = null;
     private int rating = 0;
-    private int creatorId = 0;
-    private int postId = 0;
-
     public String getCreatorName() {
         return creatorName;
     }
@@ -15,35 +13,41 @@ public class UserPost {
         return text;
     }
 
+    public String getPostName() {
+        return postName;
+    }
+
+    public void setPostName(String postName) {
+        this.postName = postName;
+    }
+
     public int getRating() {
         return rating;
     }
 
-    public int getCreatorId() {
-        return creatorId;
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
     }
 
-    public int getPostId() {
-        return postId;
+    public void setText(String text) {
+        this.text = text;
     }
+
+    public void setRating(int rating) {
+        this.rating = 0;
+    }
+
 
     @Override
     public String toString() {
         return "UserPost{" +
                 "creatorName='" + creatorName + '\'' +
                 ", text='" + text + '\'' +
+                ", postName='" + postName + '\'' +
                 ", rating=" + rating +
-                ", creatorId=" + creatorId +
-                ", postId=" + postId +
                 '}';
     }
 
-    public UserPost(int postId, int creatorId, String creatorName, String text) {
-        this.postId = postId;
-        this.creatorId = creatorId;
-        this.creatorName = creatorName;
-        this.text = text;
-    }
     public void changeRating(int value){
         rating += value;
     }

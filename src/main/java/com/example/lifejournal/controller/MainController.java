@@ -9,82 +9,99 @@ import java.util.*;
 
 @Controller
 public class MainController {
-    private int maxUserId = 0;
-    private int maxPostId = 0;
-    private List<UserPost> posts = new ArrayList<>();
-    private List<User> users = new ArrayList<>();
+    private Map<String, User> users = new HashMap<>();
+    private Map<String, UserPost> posts = new HashMap<>();
+    private Map<String, HashMap<String, Integer>> votes = new HashMap<>(); //String = post name, K = username, v = vote value (1 || -1)
+    boolean checkPasswordAndUserName(String userName, String password){
+        if (!users.containsKey(userName)) {
+            return false;
+        }
+        if (!users.get(userName).checkPassword(password)){
+            return false;
+        }
+        return true;
+    }
 
     @GetMapping("/get/userNumber")
     @ResponseBody
     public int getUserNumber(){
-        return maxUserId;
+        return users.size();
     }
 
     @GetMapping("/get/postNumber")
     @ResponseBody
     public int getPostNumber(){
-        return maxPostId;
+        return posts.size();
     }
 
-    @PostMapping(value = "/create/user")
+    @GetMapping("/get/posts")
     @ResponseBody
-    public String createUser(@RequestParam("name") String name,
-                             @RequestParam("password") String password){
-        User user = new User(maxUserId, name, password);
-        users.add(user);
-        maxUserId++;
+    public String getPosts(){
+        return posts.values().toString();
+    }
+
+    @GetMapping("/get/users")
+    @ResponseBody
+    public String getUsers(){
+        return users.values().toString();
+    }
+
+    @PostMapping("/create/user")
+    @ResponseBody
+    public String createUser(@RequestBody User user){
+        if (users.containsKey(user.getName())){
+            return "Name already taken";
+        }
+        users.put(user.getName() , user);
         return user.toString();
     }
 
-    @PostMapping("/create/post")
+    @PostMapping("/create/post/{password}")
     @ResponseBody
-    public String createPost(@RequestParam("userId") int userId,
-                             @RequestParam("text") String text,
-                             @RequestParam("password") String password){
-        if (maxUserId <= userId){
-            return "Invalid user id";
+    public String createPost(@PathVariable("password") String password , @RequestBody UserPost userPost){
+        if (!checkPasswordAndUserName(userPost.getCreatorName(), password)){
+            return "Wrong username or password";
         }
-        if (!users.get(userId).checkPassword(password)){
-            return "Invalid password";
+        if (posts.containsKey(userPost.getPostName())){
+            return "Post name already taken";
         }
-        UserPost userPost = new UserPost(maxPostId, userId, users.get(userId).getName(), text);
-        posts.add(userPost);
-        maxPostId++;
+        posts.put(userPost.getPostName(), userPost);
         return userPost.toString();
     }
 
     @PostMapping("/vote")
     @ResponseBody
-    public String vote(@RequestParam("userId") int userId,
-                       @RequestParam("postId") int postId,
+    public String vote(@RequestParam("userName") String userName,
+                       @RequestParam("postName") String postName,
                        @RequestParam("value") int value,
                        @RequestParam("password") String password){
-        if (maxUserId <= userId){
-            return "Invalid userId";
+        if (!checkPasswordAndUserName(userName, password)){
+            return "Wrong username or password";
         }
-        if (maxPostId <= postId){
-            return "Invalid postId";
+        if (!posts.containsKey(postName)){
+            return "Invalid post name";
         }
         if (value == 0){
             return "Invalid vote value";
         }
-        if (!users.get(userId).checkPassword(password)){
-            return "Invalid password";
+        int val = 0;
+        if (votes.get(postName) != null){
+            if (votes.get(postName).get(userName) != null){
+                val = votes.get(postName).get(userName);
+            }
         }
-        int val = users.get(userId).vote(value / Math.abs(value), postId);
-        posts.get(postId).changeRating(val);
-        return posts.get(postId).toString();
+        value /= Math.abs(value);
+        value -= val;
+        if (votes.get(postName) != null){
+            votes.get(postName).put(userName, value);
+        }
+        else {
+            HashMap<String, Integer> submap = new HashMap<>();
+            submap.put(userName, value);
+            votes.put(postName, submap);
+        }
+        posts.get(postName).changeRating(value);
+        return posts.get(postName).toString();
     }
 
-
-    @GetMapping("/get/posts")
-    @ResponseBody
-    public String getPosts(){
-        return posts.toString();
-    }
-    @GetMapping("/get/users")
-    @ResponseBody
-    public String getUsers(){
-        return users.toString();
-    }
 }

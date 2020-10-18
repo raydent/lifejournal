@@ -1,10 +1,16 @@
 package com.example.lifejournal.model;
 
-public class UserPost {
+import java.util.Objects;
+
+public class Post {
     private String creatorName = null;
     private String text = null;
     private String postName = null;
     private int rating = 0;
+    private int id;
+
+
+
     public String getCreatorName() {
         return creatorName;
     }
@@ -19,6 +25,14 @@ public class UserPost {
 
     public void setPostName(String postName) {
         this.postName = postName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getRating() {
@@ -40,12 +54,30 @@ public class UserPost {
 
     @Override
     public String toString() {
-        return "UserPost{" +
+        return "Post{" +
                 "creatorName='" + creatorName + '\'' +
                 ", text='" + text + '\'' +
                 ", postName='" + postName + '\'' +
                 ", rating=" + rating +
+                ", id=" + id +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return rating == post.rating &&
+                id == post.id &&
+                creatorName.equals(post.creatorName) &&
+                text.equals(post.text) &&
+                postName.equals(post.postName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public void changeRating(int value){

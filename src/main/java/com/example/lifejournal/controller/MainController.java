@@ -1,6 +1,6 @@
 package com.example.lifejournal.controller;
 
-import com.example.lifejournal.model.UserPost;
+import com.example.lifejournal.model.Post;
 import com.example.lifejournal.model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -10,13 +10,14 @@ import java.util.*;
 @Controller
 public class MainController {
     private Map<String, User> users = new HashMap<>();
-    private Map<String, UserPost> posts = new HashMap<>();
+    private Map<String, Post> posts = new HashMap<>();
     private Map<String, HashMap<String, Integer>> votes = new HashMap<>(); //String = post name, K = username, v = vote value (1 || -1)
-    boolean checkPasswordAndUserName(String userName, String password){
+
+    boolean checkPasswordAndUserName(String userName, String password) {
         if (!users.containsKey(userName)) {
             return false;
         }
-        if (!users.get(userName).checkPassword(password)){
+        if (!users.get(userName).checkPassword(password)) {
             return false;
         }
         return true;
@@ -58,20 +59,20 @@ public class MainController {
 
     @PostMapping("/create/post/{password}")
     @ResponseBody
-    public String createPost(@PathVariable("password") String password , @RequestBody UserPost userPost){
-        if (!checkPasswordAndUserName(userPost.getCreatorName(), password)){
+    public String createPost(@PathVariable("password") String password , @RequestBody Post post){
+        if (!checkPasswordAndUserName(post.getCreatorName(), password)){
             return "Wrong username or password";
         }
-        if (posts.containsKey(userPost.getPostName())){
+        if (posts.containsKey(post.getPostName())){
             return "Post name already taken";
         }
-        posts.put(userPost.getPostName(), userPost);
-        return userPost.toString();
+        posts.put(post.getPostName(), post);
+        return post.toString();
     }
 
-    @PostMapping("/vote")
+    @PostMapping("/likeOrDislike")
     @ResponseBody
-    public String vote(@RequestParam("userName") String userName,
+    public String likeOrDislike(@RequestParam("userName") String userName,
                        @RequestParam("postName") String postName,
                        @RequestParam("value") int value,
                        @RequestParam("password") String password){

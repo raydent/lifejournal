@@ -17,11 +17,11 @@ public class CustomException extends Exception {
         this.errorCode = errorCode;
     }
 
-    public String getErrorDecription() {
+    public String getErrorDescription() {
         return errorDescription;
     }
 
-    public void setErrorDecription(String errorDescription) {
+    public void setErrorDescription(String errorDescription) {
         this.errorDescription = errorDescription;
     }
 }

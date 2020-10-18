@@ -1,6 +1,8 @@
 package com.example.lifejournal.controller;
 
 import com.example.lifejournal.CustomException;
+import com.example.lifejournal.model.Post;
+import com.example.lifejournal.model.PostData;
 import com.example.lifejournal.model.User;
 import com.example.lifejournal.model.UsernameAndPassword;
 import com.example.lifejournal.service.IAuthService;
@@ -21,7 +23,7 @@ public class AuthController {
         try {
             return authService.createUser(usernameAndPassword).toString();
         } catch (CustomException e) {
-            return e.getErrorDecription();
+            return e.getErrorDescription();
         }
     }
 
@@ -33,8 +35,23 @@ public class AuthController {
             user = authService.authUser(usernameAndPassword);
         }
         catch (CustomException e){
-            return e.getErrorDecription();
+            return e.getErrorDescription();
         }
         return user.toString();
     }
+
+    @PostMapping("/post")
+    @ResponseBody
+    public String createPost(@RequestBody PostData postData) {
+        Post post = new Post();
+        try{
+            post = authService.createPost(postData);
+        }
+        catch (CustomException e){
+            return e.getErrorDescription();
+        }
+        return post.toString();
+    }
+
+
 }

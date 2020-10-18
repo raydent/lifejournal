@@ -2,6 +2,8 @@ package com.example.lifejournal.service;
 
 import com.example.lifejournal.CustomErrors;
 import com.example.lifejournal.CustomException;
+import com.example.lifejournal.model.Post;
+import com.example.lifejournal.model.PostData;
 import com.example.lifejournal.model.User;
 import com.example.lifejournal.model.UsernameAndPassword;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +36,22 @@ public class AuthService implements IAuthService {
         if (usernameAndPassword.getPassword().length() < 7) {
             throw CustomErrors.PASSWORD_HAS_INVALID_LENGTH.getException();
         }
-        List<User> users = this.dbExample.getCreatedUsers();
-        for (User user : users){
-            if (user.getName().equals(usernameAndPassword.getUsername())){
-                throw CustomErrors.USER_WITH_SUCH_USERNAME_FOUND.getException();
-            }
-        }
         User user = new User();
         user.setName(usernameAndPassword.getUsername());
         user.setPassword(usernameAndPassword.getPassword());
         return dbExample.createUser(user);
+    }
+
+    @Override
+    public Post createPost(PostData postData) throws CustomException {
+        UsernameAndPassword usernameAndPassword = new UsernameAndPassword();
+        usernameAndPassword.setPassword(postData.getPassword());
+        usernameAndPassword.setUsername(postData.getCreatorName());
+        this.authUser(usernameAndPassword);
+        Post post = new Post();
+        post.setText(postData.getText());
+        post.setCreatorName(postData.getCreatorName());
+        post.setPostName(postData.getPostName());
+        return dbExample.createPost(post);
     }
 }

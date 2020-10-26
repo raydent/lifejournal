@@ -5,6 +5,24 @@ public class PostData {
     private String password;
     private String text;
     private String postName;
+    private Integer creatorId;
+    private Integer Id;
+
+    public Integer getId() {
+        return Id;
+    }
+
+    public void setId(Integer id) {
+        Id = id;
+    }
+
+    public Integer getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(Integer creatorId) {
+        this.creatorId = creatorId;
+    }
 
     public String getCreatorName() {
         return creatorName;

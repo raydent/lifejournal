@@ -50,7 +50,7 @@ public class AuthService implements IAuthService {
         this.authUser(usernameAndPassword);
         Post post = new Post();
         post.setText(postData.getText());
-        post.setCreatorName(postData.getCreatorName());
+        post.setCreatorId(postData.getCreatorId());
         post.setPostName(postData.getPostName());
         return dbExample.createPost(post);
     }

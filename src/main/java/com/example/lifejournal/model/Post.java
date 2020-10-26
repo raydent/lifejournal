@@ -1,18 +1,26 @@
 package com.example.lifejournal.model;
 
+
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "posts")
 public class Post {
-    private String creatorName = null;
+    private Integer creatorId = null;
     private String text = null;
     private String postName = null;
     private int rating = 0;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    public void setCreatorId(Integer creatorId) {
+        this.creatorId = creatorId;
+    }
 
-
-    public String getCreatorName() {
-        return creatorName;
+    public Integer getCreatorId() {
+        return creatorId;
     }
 
     public String getText() {
@@ -39,8 +47,8 @@ public class Post {
         return rating;
     }
 
-    public void setCreatorName(String creatorName) {
-        this.creatorName = creatorName;
+    public void setCreatorName(Integer creatorId) {
+        this.creatorId = creatorId;
     }
 
     public void setText(String text) {
@@ -55,7 +63,7 @@ public class Post {
     @Override
     public String toString() {
         return "Post{" +
-                "creatorName='" + creatorName + '\'' +
+                "creatoId='" + creatorId + '\'' +
                 ", text='" + text + '\'' +
                 ", postName='" + postName + '\'' +
                 ", rating=" + rating +
@@ -70,7 +78,7 @@ public class Post {
         Post post = (Post) o;
         return rating == post.rating &&
                 id == post.id &&
-                creatorName.equals(post.creatorName) &&
+                creatorId.equals(post.creatorId) &&
                 text.equals(post.text) &&
                 postName.equals(post.postName);
     }

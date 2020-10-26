@@ -1,10 +1,15 @@
 package com.example.lifejournal.model;
 
+import javax.persistence.*;
 import java.util.*;
 
+@Entity
+@Table(name = "users")
 public class User {
     private String name;
     private String password;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     int id;
 
 

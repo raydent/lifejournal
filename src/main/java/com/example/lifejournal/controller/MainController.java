@@ -2,6 +2,8 @@ package com.example.lifejournal.controller;
 
 import com.example.lifejournal.model.Post;
 import com.example.lifejournal.model.User;
+import com.example.lifejournal.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,55 +11,42 @@ import java.util.*;
 
 @Controller
 public class MainController {
-    private Map<String, User> users = new HashMap<>();
-    private Map<String, Post> posts = new HashMap<>();
-    private Map<String, HashMap<String, Integer>> votes = new HashMap<>(); //String = post name, K = username, v = vote value (1 || -1)
+    @Autowired
+    private IUserService userService;
 
-    boolean checkPasswordAndUserName(String userName, String password) {
-        if (!users.containsKey(userName)) {
-            return false;
-        }
-        if (!users.get(userName).checkPassword(password)) {
-            return false;
-        }
-        return true;
-    }
 
     @GetMapping("/get/userNumber")
     @ResponseBody
     public int getUserNumber(){
-        return users.size();
+        return userService.getAllUsers().size();
     }
 
-    @GetMapping("/get/postNumber")
+    /*@GetMapping("/get/postNumber")
     @ResponseBody
     public int getPostNumber(){
         return posts.size();
-    }
+    }*/
 
-    @GetMapping("/get/posts")
-    @ResponseBody
-    public String getPosts(){
-        return posts.values().toString();
-    }
+//    @GetMapping("/get/posts")
+//    @ResponseBody
+//    public String getPosts(){
+//        return posts.values().toString();
+//    }
 
     @GetMapping("/get/users")
     @ResponseBody
     public String getUsers(){
-        return users.values().toString();
+        return userService.getAllUsers().toString();
     }
 
     @PostMapping("/create/user")
     @ResponseBody
     public String createUser(@RequestBody User user){
-        if (users.containsKey(user.getName())){
-            return "Name already taken";
-        }
-        users.put(user.getName() , user);
-        return user.toString();
+        //return Optional.ofNullable(userService.save(user)).map(User::toString).orElse("NULL");
+        return userService.save(user).toString();
     }
 
-    @PostMapping("/create/post/{password}")
+    /*@PostMapping("/create/post/{password}")
     @ResponseBody
     public String createPost(@PathVariable("password") String password , @RequestBody Post post){
         if (!checkPasswordAndUserName(post.getCreatorName(), password)){
@@ -68,9 +57,9 @@ public class MainController {
         }
         posts.put(post.getPostName(), post);
         return post.toString();
-    }
+    }*/
 
-    @PostMapping("/likeOrDislike")
+    /*@PostMapping("/likeOrDislike")
     @ResponseBody
     public String likeOrDislike(@RequestParam("userName") String userName,
                        @RequestParam("postName") String postName,
@@ -103,6 +92,6 @@ public class MainController {
         }
         posts.get(postName).changeRating(value);
         return posts.get(postName).toString();
-    }
+    }*/
 
 }

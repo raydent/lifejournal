@@ -40,6 +40,7 @@ public class UserService implements IUserService, UserDetailsService {
         if (userFromDB == null) {
             user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
         }
+        user.setPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(user.getPassword()));
         return userRepository.save(user);
     }
 

@@ -134,6 +134,25 @@ public class MainController {
         return "redirect:/user";
     }
 
+    @GetMapping("/post")
+    public String getPost(Model model) {
+        model.addAttribute("postForm", new Post());
+        return "post";
+    }
+
+    @PostMapping("/post")
+    public String createPost(@ModelAttribute("postForm") Post postForm, Model model) {
+        System.out.println("Started");
+        /*Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        postForm.setId(userService.getUserByName(currentPrincipalName).getId());*/
+        int creatorId  = ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        postForm.setCreatorId(creatorId);
+        //System.out.println(postForm.toString());
+        postService.save(postForm);
+        return "redirect:/get/posts";
+    }
+
     @GetMapping("/admin")
     public String getAdmin() {
         return "/admin";
@@ -158,28 +177,4 @@ public class MainController {
     public String user() {
         return "/user";
     }
-
-    /*@GetMapping("/post")
-    public String getPost(Model model) {
-        model.addAttribute("postForm", new Post());
-        return "/post";
-    }
-
-    @PostMapping("/post")
-    @ResponseBody
-    public String createPost(@ModelAttribute("postForm") Post postForm, Model model, @AuthenticationPrincipal User authenticatedUser) {
-        System.out.println("Started");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UsernamePasswordAuthenticationToken authReq
-                = new UsernamePasswordAuthenticationToken(authenticatedUser.getName(), authenticatedUser.getPassword(), authenticatedUser.getAuthorities());
-        Authentication auth = authenticationManager.authenticate(authReq);
-        SecurityContext sc = SecurityContextHolder.getContext();
-        sc.setAuthentication(auth);
-        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-        postForm.setId(userService.getUserByName(currentPrincipalName).getId());
-        //System.out.println(postForm.toString());
-        postService.save(postForm);
-        return postService.getAllPosts().toString();
-    }*/
 }

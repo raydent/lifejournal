@@ -9,6 +9,7 @@ import com.example.lifejournal.service.IUserService;
 import com.example.lifejournal.security.SpringSecurityConfig;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -157,4 +158,28 @@ public class MainController {
     public String user() {
         return "/user";
     }
+
+    /*@GetMapping("/post")
+    public String getPost(Model model) {
+        model.addAttribute("postForm", new Post());
+        return "/post";
+    }
+
+    @PostMapping("/post")
+    @ResponseBody
+    public String createPost(@ModelAttribute("postForm") Post postForm, Model model, @AuthenticationPrincipal User authenticatedUser) {
+        System.out.println("Started");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UsernamePasswordAuthenticationToken authReq
+                = new UsernamePasswordAuthenticationToken(authenticatedUser.getName(), authenticatedUser.getPassword(), authenticatedUser.getAuthorities());
+        Authentication auth = authenticationManager.authenticate(authReq);
+        SecurityContext sc = SecurityContextHolder.getContext();
+        sc.setAuthentication(auth);
+        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        postForm.setId(userService.getUserByName(currentPrincipalName).getId());
+        //System.out.println(postForm.toString());
+        postService.save(postForm);
+        return postService.getAllPosts().toString();
+    }*/
 }

@@ -40,7 +40,7 @@ public class AuthController {
         return user.toString();
     }
 
-    @PostMapping("/post")
+    /*@PostMapping("/post")
     @ResponseBody
     public String createPost(@RequestBody PostData postData) {
         Post post = new Post();
@@ -51,7 +51,7 @@ public class AuthController {
             return e.getErrorDescription();
         }
         return post.toString();
-    }
+    }*/
 
 
 }

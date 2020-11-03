@@ -1,0 +1,30 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
+<head>
+    <title>Post</title>
+<body>
+
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+
+        <div class="fadeIn first">
+            <label id="lable">Post form</label>
+        </div>
+
+        <form th:userDto="${postForm}" th:action="@{/post}" th:method="post">
+            <input type="text" id="postName" class="fadeIn second" name="postName" placeholder="postName" required autofocus
+                   th:field="*{postForm.postName}">
+
+            <input type="text" id="text" class="fadeIn third" placeholder="text" required
+                   th:field="*{postForm.text}">
+
+            <input id="button-sub" type="submit" class="fadeIn fourth" value="Submit">
+        </form>
+
+        <div id="formFooter">
+            <a class="underlineHover" href="registration">Not registered yet? Click here</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
